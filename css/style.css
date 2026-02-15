@@ -387,6 +387,11 @@ input, textarea, select {
     gap: 12px;
 }
 
+/* فقط در منوی کشویی موبایل نمایش داده شود؛ در دسکتاپ مخفی */
+.nav-actions-mobile {
+    display: none;
+}
+
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -1993,4 +1998,129 @@ input, textarea, select {
 .back-to-top:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(108, 58, 237, 0.5);
+}
+
+/* ==================== LOGIN / REGISTER MODAL ==================== */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal.active .modal-box {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+}
+
+.modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-darker);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 32px;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: var(--bg-dark);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.modal-close:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.modal-header i {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.modal-header h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: 6px;
+}
+
+.modal-header p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.login-form .form-group {
+    margin-bottom: 18px;
+}
+
+.form-error-global {
+    display: block;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.btn-block {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font: inherit;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.link-btn:hover {
+    color: var(--primary-dark);
 }

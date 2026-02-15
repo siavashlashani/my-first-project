@@ -162,6 +162,160 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ==================== LOGIN / REGISTER MODAL ====================
+    const API_BASE = window.API_BASE || 'http://localhost:3000';
+    const loginTriggers = document.querySelectorAll('.login-trigger');
+    const loginModal = document.getElementById('loginModal');
+    const loginModalOverlay = document.getElementById('loginModalOverlay');
+    const loginModalClose = document.getElementById('loginModalClose');
+    const loginForm = document.getElementById('loginForm');
+    const loginFormError = document.getElementById('loginFormError');
+    const registerModal = document.getElementById('registerModal');
+    const registerModalOverlay = document.getElementById('registerModalOverlay');
+    const registerModalClose = document.getElementById('registerModalClose');
+    const registerForm = document.getElementById('registerForm');
+    const registerFormError = document.getElementById('registerFormError');
+    const showRegisterBtn = document.getElementById('showRegisterBtn');
+    const showLoginBtn = document.getElementById('showLoginBtn');
+
+    function openLoginModal() {
+        registerModal.classList.remove('active');
+        loginModal.classList.add('active');
+        document.body.classList.add('no-scroll');
+        loginModal.setAttribute('aria-hidden', 'false');
+    }
+    function closeLoginModal() {
+        loginModal.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        loginModal.setAttribute('aria-hidden', 'true');
+    }
+    function openRegisterModal() {
+        loginModal.classList.remove('active');
+        registerModal.classList.add('active');
+        document.body.classList.add('no-scroll');
+        registerModal.setAttribute('aria-hidden', 'false');
+    }
+    function closeRegisterModal() {
+        registerModal.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        registerModal.setAttribute('aria-hidden', 'true');
+    }
+
+    loginTriggers.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (isLoggedIn()) {
+                logout();
+            } else {
+                openLoginModal();
+            }
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        });
+    });
+    loginModalOverlay && loginModalOverlay.addEventListener('click', closeLoginModal);
+    loginModalClose && loginModalClose.addEventListener('click', closeLoginModal);
+    registerModalOverlay && registerModalOverlay.addEventListener('click', closeRegisterModal);
+    registerModalClose && registerModalClose.addEventListener('click', closeRegisterModal);
+    showRegisterBtn && showRegisterBtn.addEventListener('click', () => { closeLoginModal(); openRegisterModal(); });
+    showLoginBtn && showLoginBtn.addEventListener('click', () => { closeRegisterModal(); openLoginModal(); });
+
+    function isLoggedIn() {
+        return !!localStorage.getItem('authToken');
+    }
+    function setLoginState(loggedIn, userName) {
+        loginTriggers.forEach(btn => {
+            btn.textContent = loggedIn ? 'خروج' : 'ورود';
+            if (loggedIn) btn.classList.add('logged-in');
+            else btn.classList.remove('logged-in');
+        });
+    }
+    function logout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userName');
+        setLoginState(false);
+    }
+    setLoginState(isLoggedIn());
+
+    loginForm && loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginFormError.textContent = '';
+        loginForm.querySelectorAll('.form-group input').forEach(i => { i.classList.remove('error'); });
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) {
+            loginFormError.textContent = 'لطفاً ایمیل و رمز عبور را وارد کنید.';
+            return;
+        }
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const origHtml = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ورود...';
+        submitBtn.disabled = true;
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.token) {
+                localStorage.setItem('authToken', data.token);
+                if (data.user && data.user.name) localStorage.setItem('userName', data.user.name);
+                setLoginState(true, data.user && data.user.name);
+                closeLoginModal();
+                loginForm.reset();
+            } else {
+                loginFormError.textContent = data.message || 'ایمیل یا رمز عبور اشتباه است.';
+            }
+        } catch (err) {
+            loginFormError.textContent = 'اتصال به سرور برقرار نشد. سرور را اجرا کنید.';
+        }
+        submitBtn.innerHTML = origHtml;
+        submitBtn.disabled = false;
+    });
+
+    registerForm && registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        registerFormError.textContent = '';
+        registerForm.querySelectorAll('.form-group input').forEach(i => { i.classList.remove('error'); });
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        if (!name || !email || !password) {
+            registerFormError.textContent = 'همه فیلدها را پر کنید.';
+            return;
+        }
+        if (password.length < 6) {
+            registerFormError.textContent = 'رمز عبور حداقل ۶ کاراکتر باشد.';
+            return;
+        }
+        const submitBtn = registerForm.querySelector('button[type="submit"]');
+        const origHtml = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ثبت‌نام...';
+        submitBtn.disabled = true;
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.token) {
+                localStorage.setItem('authToken', data.token);
+                if (data.user && data.user.name) localStorage.setItem('userName', data.user.name);
+                setLoginState(true);
+                closeRegisterModal();
+                registerForm.reset();
+            } else {
+                registerFormError.textContent = data.message || 'ثبت‌نام انجام نشد.';
+            }
+        } catch (err) {
+            registerFormError.textContent = 'اتصال به سرور برقرار نشد.';
+        }
+        submitBtn.innerHTML = origHtml;
+        submitBtn.disabled = false;
+    });
+
     // Active nav link on scroll
     function updateActiveNav() {
         const sections = document.querySelectorAll('section[id]');

@@ -46,8 +46,13 @@
                 <li><a href="#portfolio">نمونه‌کارها</a></li>
                 <li><a href="#blog">بلاگ</a></li>
                 <li><a href="#contact">تماس</a></li>
+                <li class="nav-actions-mobile">
+                    <button type="button" class="btn btn-outline btn-sm login-trigger" aria-label="ورود">ورود</button>
+                    <a href="#contact" class="btn btn-primary btn-sm nav-consult-link">مشاوره رایگان</a>
+                </li>
             </ul>
             <div class="nav-actions">
+                <button type="button" class="btn btn-outline btn-sm login-trigger" id="loginBtn" aria-label="ورود">ورود</button>
                 <a href="#contact" class="btn btn-primary btn-sm">مشاوره رایگان</a>
                 <button class="menu-toggle" id="menuToggle" aria-label="منوی ناوبری">
                     <span></span>
@@ -880,6 +885,81 @@
             </div>
         </div>
     </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" aria-hidden="true">
+        <div class="modal-overlay" id="loginModalOverlay"></div>
+        <div class="modal-box modal-login">
+            <button type="button" class="modal-close" id="loginModalClose" aria-label="بستن">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <i class="fas fa-user-circle"></i>
+                <h3>ورود به حساب کاربری</h3>
+                <p>برای دسترسی به پنل، وارد شوید</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginEmail">ایمیل یا نام کاربری</label>
+                    <input type="text" id="loginEmail" name="email" placeholder="example@email.com" dir="ltr" required>
+                    <span class="form-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">رمز عبور</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="••••••••" required>
+                    <span class="form-error"></span>
+                </div>
+                <div id="loginFormError" class="form-error form-error-global"></div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i>
+                    ورود
+                </button>
+            </form>
+            <p class="login-footer">
+                حساب کاربری ندارید؟ <button type="button" class="link-btn" id="showRegisterBtn">ثبت‌نام</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal" aria-hidden="true">
+        <div class="modal-overlay" id="registerModalOverlay"></div>
+        <div class="modal-box modal-login">
+            <button type="button" class="modal-close" id="registerModalClose" aria-label="بستن">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <i class="fas fa-user-plus"></i>
+                <h3>ثبت‌نام</h3>
+                <p>حساب کاربری جدید بسازید</p>
+            </div>
+            <form id="registerForm" class="login-form">
+                <div class="form-group">
+                    <label for="regName">نام و نام خانوادگی</label>
+                    <input type="text" id="regName" name="name" placeholder="نام شما" required>
+                    <span class="form-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">ایمیل</label>
+                    <input type="email" id="regEmail" name="email" placeholder="example@email.com" dir="ltr" required>
+                    <span class="form-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">رمز عبور</label>
+                    <input type="password" id="regPassword" name="password" placeholder="حداقل ۶ کاراکتر" required>
+                    <span class="form-error"></span>
+                </div>
+                <div id="registerFormError" class="form-error form-error-global"></div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-user-plus"></i>
+                    ثبت‌نام
+                </button>
+            </form>
+            <p class="login-footer">
+                قبلاً ثبت‌نام کرده‌اید؟ <button type="button" class="link-btn" id="showLoginBtn">ورود</button>
+            </p>
+        </div>
+    </div>
 
     <!-- Back to Top -->
     <button id="backToTop" class="back-to-top" aria-label="بازگشت به بالا">

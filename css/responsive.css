@@ -133,8 +133,27 @@
         border-radius: var(--radius-md);
     }
 
-    .nav-actions .btn {
+    /* دکمه‌های ورود و مشاوره در دسکتاپ داخل نوار مخفی می‌شوند؛ در منوی موبایل نمایش داده می‌شوند */
+    .nav-actions .btn:not(.menu-toggle) {
         display: none;
+    }
+
+    /* دکمه‌های ورود و مشاوره داخل منوی کشویی موبایل */
+    .nav-actions-mobile {
+        list-style: none;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-color);
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .nav-actions-mobile .btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
     }
 
     .menu-toggle {
